@@ -1,48 +1,39 @@
 #!/usr/bin/python3
 """
-Write a script that reads stdin line by line
-and computes metrics
+Script that reads stdin line by line and computes metrics
 """
 
-if __name__ == '__main__':
 
-    import sys
+import sys
 
-    def printMetrix(fileSize, statusCodes):
-        """
-            prints the metrics
-        """
 
-        print("File size: {}".format(fileSize))
-        for status, count in sorted(statusCodes.items()):
-            if count:
-                print("{}: {}".format(status, count))
+status_codes = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0, '404': 0,
+                '405': 0, '500': 0}
+counter = 0
+size = 0
 
-    counter = 0
-    fileSize = 0
-    statusCodes = {"200": 0,
-                   "301": 0,
-                   "400": 0,
-                   "401": 0,
-                   "403": 0,
-                   "404": 0,
-                   "405": 0,
-                   "500": 0
-                   }
-    try:
-        for line in sys.stdin:
+try:
+    for l in sys.stdin:
+        data = l.split()
+        data = data[::-1]
+
+        if len(data) > 2:
             counter += 1
-            data = line.split()
-            try:
-                code = data[-2]
-                if code in statusCodes:
-                    statusCodes[code] += 1
-                fileSize += int(data[-1])
-            except BaseException:
-                pass
-            if counter % 10 == 0:
-                printMetrix(fileSize, statusCodes)
-        printMetrix(fileSize, statusCodes)
-    except KeyboardInterrupt:
-        printMetrix(fileSize, statusCodes)
-        raise
+            if counter <= 10:
+                size += int(data[0])
+                code = data[1]
+
+            if code in status_codes.keys():
+                status_codes[code] += 1
+
+            if counter == 10:
+                print('File size: {}'.format(size))
+                for sc, v in sorted(status_codes.items()):
+                    if v != 0:
+                        print('{}: {}'.format(sc, v))
+                counter = 0
+finally:
+    print('File size: {}'.format(size))
+    for sc, v in sorted(status_codes.items()):
+        if v != 0:
+            print('{}: {}'.format(sc, v))
