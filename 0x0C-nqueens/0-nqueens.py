@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-''' solve the NQueens problem '''
+''' Program to solve the NQueens problem '''
 from sys import argv
 
 
-def pBoard(board, size):
+def printBoard(board, size):
     ''' Function to print all the posible solutions '''
     res = []
     for i in range(size):
@@ -38,7 +38,7 @@ def validPosition(board, row, col, size):
 def nQueen(board, col, size):
     ''' Place the posible position on a nQueen Board '''
     if (col == size):
-        pBoard(board, size)
+        printBoard(board, size)
         return True
 
     res = False
@@ -48,6 +48,7 @@ def nQueen(board, col, size):
             res = nQueen(board, col + 1, size) or res
             board[i][col] = 0
     return res
+
 
 if __name__ == '__main__':
     if len(argv) != 2:
