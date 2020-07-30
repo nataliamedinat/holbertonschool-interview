@@ -50,20 +50,15 @@ def nQueen(board, col, size):
     return res
 
 if __name__ == '__main__':
-
-if len(argv) != 2:
-    print("Usage: nqueens N")
-    exit(1)
-
-if not argv[1].isnumeric():
-    print("N must be a number")
-    exit(1)
-
-length = int(argv[1])
-
-if length < 4:
-    print("N must be at least 4")
-    exit(1)
-
-board = [[0 for y in range(length)] for x in range(length)]
-response = nQueenPlace(board, 0, length)
+    if len(argv) != 2:
+        print("Usage: nqueens N")
+        exit(1)
+    if not argv[1].isnumeric():
+        print("N must be a number")
+        exit(1)
+    size = int(argv[1])
+    if size < 4:
+        print("N must be at least 4")
+        exit(1)
+    board = [[0 for j in range(size)] for i in range(size)]
+    res = nQueen(board, 0, size)
