@@ -1,83 +1,53 @@
 #!/usr/bin/python3
-
-""" Solve the NQueens problem """
-
-from sys import argv
+"""nqueens"""
+import sys
 
 
-def printPositions(board, length):
-    """ Print the posible solutions """
-
-    solution = []
-
-    for x in range(length):
-        for y in range(length):
-            if board[x][y] == 1:
-                solution.append([x, y])
-    print(solution)
+def start(en):
+    solutions = []
+    for row in range(0, en):
+        solve(en, 0, row, solutions)
+    for solution in solutions:
+        print(solution)
 
 
-def ableSpace(board, row, col, length):
-    """ Check if a position is able """
+def solve(size, col, row, sol_set, sol=[]):
+    e = evaluate(col, row, sol)
+    if e is False:
+        return
+    s = sol.copy()
+    s.append([col, row])
+    if col == size - 1:
+        accept(sol_set, s)
+    for new_row in range(0, size):
+        solve(size, col + 1, new_row, sol_set, s)
 
-    for x in range(col):
-        if (board[row][x]):
+
+def evaluate(col, row, sol):
+    for queen in sol:
+        if queen[0] == col or queen[1] == row:
             return False
-
-    x = row
-    y = col
-
-    while x >= 0 and y >= 0:
-        if(board[x][y]):
+        if queen[0] - queen[1] == col - row:
             return False
-        x -= 1
-        y -= 1
-
-    x = row
-    y = col
-
-    while y >= 0 and x < length:
-        if(board[x][y]):
+        if queen[0] + queen[1] == col + row:
             return False
-        x = x + 1
-        y = y - 1
-
     return True
 
 
-def nQueenPlace(board, col, size):
+def accept(sol_set, sol):
+    sol_set.append(sol)
 
-    ''' Place the posible nQueen's position in a Board '''
 
-    if (col == length):
-        printPositions(board, length)
-        return True
-
-    response = False
-
-    for x in range(length):
-        if (ableSpace(board, x, col, length)):
-            board[x][col] = 1
-            response = nQueenPlace(board, col + 1, length) or response
-            board[x][col] = 0
-
-    return response
-
-if __name__ == '__main__':
-
-    if len(argv) != 2:
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
         print("Usage: nqueens N")
-        exit(1)
-
-    if not argv[1].isnumeric():
+        sys.exit(1)
+    try:
+        int(sys.argv[1])
+    except:
         print("N must be a number")
-        exit(1)
-
-    length = int(argv[1])
-
-    if length < 4:
+        sys.exit(1)
+    if int(sys.argv[1]) < 4:
         print("N must be at least 4")
-        exit(1)
-
-    board = [[0 for y in range(length)] for x in range(length)]
-    response = nQueenPlace(board, 0, length)
+        sys.exit(1)
+    start(int(sys.argv[1]))
