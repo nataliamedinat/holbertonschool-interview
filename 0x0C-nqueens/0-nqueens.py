@@ -1,65 +1,83 @@
 #!/usr/bin/python3
-''' Program to solve the NQueens problem '''
+
+""" Solve the NQueens problem """
+
 from sys import argv
 
 
-def printBoard(board, size):
-    ''' Function to print all the posible solutions '''
-    res = []
-    for i in range(size):
-        for j in range(size):
-            if board[i][j] == 1:
-                res.append([i, j])
-    print(res)
+def printPositions(board, length):
+    """ Print the posible solutions """
+
+    solution = []
+
+    for x in range(length):
+        for y in range(length):
+            if board[x][y] == 1:
+                solution.append([x, y])
+    print(solution)
 
 
-def validPosition(board, row, col, size):
-    ''' Check if a position is able '''
-    for i in range(col):
-        if (board[row][i]):
+def ableSpace(board, row, col, length):
+    """ Check if a position is able """
+
+    for x in range(col):
+        if (board[row][x]):
             return False
-    i = row
-    j = col
-    while i >= 0 and j >= 0:
-        if(board[i][j]):
+
+    x = row
+    y = col
+
+    while x >= 0 and y >= 0:
+        if(board[x][y]):
             return False
-        i -= 1
-        j -= 1
-    i = row
-    j = col
-    while j >= 0 and i < size:
-        if(board[i][j]):
+        x -= 1
+        y -= 1
+
+    x = row
+    y = col
+
+    while y >= 0 and x < length:
+        if(board[x][y]):
             return False
-        i = i + 1
-        j = j - 1
+        x = x + 1
+        y = y - 1
+
     return True
 
 
-def nQueen(board, col, size):
-    ''' Place the posible position on a nQueen Board '''
-    if (col == size):
-        printBoard(board, size)
+def nQueenPlace(board, col, size):
+
+    ''' Place the posible nQueen's position in a Board '''
+
+    if (col == length):
+        printPositions(board, length)
         return True
 
-    res = False
-    for i in range(size):
-        if (validPosition(board, i, col, size)):
-            board[i][col] = 1
-            res = nQueen(board, col + 1, size) or res
-            board[i][col] = 0
-    return res
+    response = False
 
+    for x in range(length):
+        if (ableSpace(board, x, col, length)):
+            board[x][col] = 1
+            response = nQueenPlace(board, col + 1, length) or response
+            board[x][col] = 0
+
+    return response
 
 if __name__ == '__main__':
+
     if len(argv) != 2:
         print("Usage: nqueens N")
         exit(1)
+
     if not argv[1].isnumeric():
         print("N must be a number")
         exit(1)
-    size = int(argv[1])
-    if size < 4:
+
+    length = int(argv[1])
+
+    if length < 4:
         print("N must be at least 4")
         exit(1)
-    board = [[0 for j in range(size)] for i in range(size)]
-    res = nQueen(board, 0, size)
+
+    board = [[0 for y in range(length)] for x in range(length)]
+    response = nQueenPlace(board, 0, length)
