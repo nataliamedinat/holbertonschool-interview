@@ -1,21 +1,26 @@
 #!/usr/bin/node
 
 const request = require('request');
-const url = 'http://swapi.co/api/films/' + process.argv[2];
 
-request.get(url, function (err, response, body) {
-  if (err) {
-    console.log(err);
+const id = process.argv[2];
+const url = `https://swapi.dev/api/films/${id}/`;
+
+request(url, async function (error, response, body) {
+  if (error) {
+    console.log(error);
   } else {
-    const all = JSON.parse(body).characters;
-    for (const cha of all) {
-      request(cha, function (err, response, body) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(JSON.parse(body).name);
-        }
+    const allchar = JSON.parse(body).characters;
+    for (const char of allchar) {
+      const res = await new Promise((resolve, reject) => {
+        request(char, (error, res, body2) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(JSON.parse(body2).name);
+          }
+        });
       });
+      console.log(res);
     }
   }
 });
