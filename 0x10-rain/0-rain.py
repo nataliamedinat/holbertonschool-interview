@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-""" rain"""
+"""
+rain
+"""
 
 def rain(walls):
     """
