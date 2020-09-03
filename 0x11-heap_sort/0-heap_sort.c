@@ -1,8 +1,8 @@
 #include "sort.h"
 
 /**
- * heapify - Function to swap to nodes
- * @array: list to be swapped
+ * swap - Function to swap to nodes
+ * @array: list
  * @size: size of array
  * @i: root
  * @s: size
@@ -31,8 +31,8 @@ void swap(int *array, int size, int i, int s)
 }
 
 /**
- * heap_sort - Function to swap to nodes
- * @array: list to be swapped
+ * heap_sort - Function that sorts an array of ints in ascending order
+ * @array: list
  * @size: size of array
  *
  * Return: Nothing
