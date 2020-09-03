@@ -3,9 +3,12 @@
 rain
 """
 
+
 def rain(walls):
     """
-    Given a list of non-negative integers representing walls of width 1, calcula    te how much water will be retained after it rains.
+    Given a list of non-negative integers representing walls
+    of width 1, calculate how much water
+    will be retained after it rains.
     """
     length = len(walls)
     res = 0
