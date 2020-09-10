@@ -26,7 +26,7 @@ void print_array(int *array, size_t left, size_t right)
 /**
  * binary_search - regular binary search
  *
- * @array: array 
+ * @array: array
  * @left: left
  * @right: right
  * @value: value to search for
@@ -52,7 +52,7 @@ int binary_search(int *array, size_t left, size_t right, int value)
 	return (-1);
 }
 /**
-* advanced_binary - function that searches for a value in a sorted array of integers
+* advanced_binary - searches for a value in a sorted array of integers
  *
  * @array: pointer to dirst element of the array
  * @size: size of array
