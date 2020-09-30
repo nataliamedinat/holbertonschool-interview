@@ -1,30 +1,30 @@
 #include "binary_trees.h"
 
 /**
- * bt_height - Check the height of a binary tree
+ * height_tree - Check the height of a binary tree
  *
  * @tree: Pointer to the node to measures the height
  *
  * Return: The height of the tree starting at @node
  */
-static size_t bt_height(const binary_tree_t *tree)
+static size_t height_tree(const binary_tree_t *tree)
 {
 	size_t h_left;
 	size_t h_right;
 
-	h_left = tree->left ? 1 + bt_height(tree->left) : 0;
-	h_right = tree->right ? 1 + bt_height(tree->right) : 0;
+	h_left = tree->left ? 1 + height_tree(tree->left) : 0;
+	h_right = tree->right ? 1 + height_tree(tree->right) : 0;
 	return (h_left > h_right ? h_left : h_right);
 }
 
 /**
- * bt_preorder - goes through a binary tree using pre-order traversal
+ * preorderbt - goes through a binary tree using pre-order traversal
  * @root: pointer root of the tree
  * @node: pointer node in the tree
  * @h: height of tree
  * @l: layer on the tree
  **/
-void bt_preorder(heap_t *root, heap_t **node, size_t h, size_t l)
+void preorderbt(heap_t *root, heap_t **node, size_t h, size_t l)
 {
 	if (!root)
 		return;
@@ -32,9 +32,9 @@ void bt_preorder(heap_t *root, heap_t **node, size_t h, size_t l)
 		*node = root;
 	l++;
 	if (root->left)
-		bt_preorder(root->left, node, h, l);
+		preorderbt(root->left, node, h, l);
 	if (root->right)
-		bt_preorder(root->right, node, h, l);
+		preorderbt(root->right, node, h, l);
 }
 
 /**
@@ -89,7 +89,7 @@ int heap_extract(heap_t **root)
 		free(tmp);
 		return (value);
 	}
-	bt_preorder(tmp, &node, bt_height(tmp), 0);
+	preorderbt(tmp, &node, height_tree(tmp), 0);
 	tmp = bt_sorting(tmp);
 	tmp->n = node->n;
 	if (node->parent->right)
