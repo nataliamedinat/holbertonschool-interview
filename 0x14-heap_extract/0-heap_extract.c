@@ -1,97 +1,101 @@
 #include "binary_trees.h"
 
 /**
- * height - returns the height of a tree
- * @tree: node to the root of the tree
- * Return: height of the tree
+ * bt_height - Check the height of a binary tree
+ *
+ * @tree: Pointer to the node to measures the height
+ *
+ * Return: The height of the tree starting at @node
  */
-size_t height(heap_t *tree)
+static size_t bt_height(const binary_tree_t *tree)
 {
-	size_t left = 0, right = 0;
+	size_t h_left;
+	size_t h_right;
 
-	if (!tree)
-		return (0);
-	left = height(tree->left);
-	right = height(tree->right);
-	if (!tree->left && !tree->right)
-		return (0);
-	return ((left > right ? left + 1 : right + 1));
+	h_left = tree->left ? 1 + bt_height(tree->left) : 0;
+	h_right = tree->right ? 1 + bt_height(tree->right) : 0;
+	return (h_left > h_right ? h_left : h_right);
 }
 
 /**
- * binary_tree_preorder - Insert a new node in the tree.
- *
- * @tree: Root of the tree.
- * @h: Height of the tree.
- * @last: Last node of the tree.
- * @level: Level of the tree.
- *
- * Return: Void.
- */
-
-void binary_tree_preorder(heap_t *tree, size_t h, heap_t **last, size_t level)
+ * bt_preorder - goes through a binary tree using pre-order traversal
+ * @root: pointer root of the tree
+ * @node: pointer node in the tree
+ * @h: height of tree
+ * @l: layer on the tree
+ **/
+void bt_preorder(heap_t *root, heap_t **node, size_t h, size_t l)
 {
-	heap_t *tmp;
-
-	if (tree == NULL)
+	if (!root)
 		return;
-	tmp = tree;
-	if (tmp)
+	if (h == l)
+		*node = root;
+	l++;
+	if (root->left)
+		bt_preorder(root->left, node, h, l);
+	if (root->right)
+		bt_preorder(root->right, node, h, l);
+}
+
+/**
+ * bt_sorting - binary tree Heapsort
+ * @tmp: pointer to the heap root
+ * Return: pointer to last node
+ **/
+
+heap_t *bt_sorting(heap_t *tmp)
+{
+	int aux;
+
+	while (tmp->left || tmp->right)
 	{
-		if (h == level)
-			*last = tmp;
-		level++;
-		if (tmp->left)
-			binary_tree_preorder(tmp->left, h, last, level);
-		if (tmp->right)
-			binary_tree_preorder(tmp->right, h, last, level);
+		if (!tmp->right || tmp->left->n > tmp->right->n)
+		{
+			aux = tmp->n;
+			tmp->n = tmp->left->n;
+			tmp->left->n = aux;
+			tmp = tmp->left;
+		}
+		else if (!tmp->left || tmp->left->n < tmp->right->n)
+		{
+			aux = tmp->n;
+			tmp->n = tmp->right->n;
+			tmp->right->n = aux;
+			tmp = tmp->right;
+		}
+
 	}
+	return (tmp);
 }
 
 /**
  * heap_extract - extracts the root node of a Max Binary Heap
- * @root: Root
- * Return: the value stored in the root node
- */
+ * @root: pointer to the heap root
+ * Return: value of extracted node
+ **/
+
 int heap_extract(heap_t **root)
 {
-	int value, tmp_value;
-	size_t level = 0;
-	heap_t *tmp, *last;
+	int value;
+	heap_t *tmp, *node;
 
-	if (root == NULL || *root == NULL)
+	if (!root || !*root)
 		return (0);
 	tmp = *root;
 	value = tmp->n;
-	if (tmp->right == NULL && tmp->left == NULL)
+	if (!tmp->left && !tmp->right)
 	{
 		*root = NULL;
 		free(tmp);
 		return (value);
 	}
-	binary_tree_preorder(tmp, height(tmp), &last, level);
-	while (tmp->left != NULL || tmp->right != NULL)
-	{
-		if (tmp->right == NULL || tmp->left->n > tmp->right->n)
-		{
-			tmp_value = tmp->n;
-			tmp->n = tmp->left->n;
-			tmp->left->n = tmp_value;
-			tmp = tmp->left;
-		}
-		else if (tmp->left == NULL || tmp->right->n > tmp->left->n)
-		{
-			tmp_value = tmp->n;
-			tmp->n = tmp->right->n;
-			tmp->right->n = tmp_value;
-			tmp = tmp->right;
-		}
-	}
-	tmp->n = last->n;
-	if (last->parent->right)
-		last->parent->right = NULL;
+	bt_preorder(tmp, &node, bt_height(tmp), 0);
+	tmp = bt_sorting(tmp);
+	tmp->n = node->n;
+	if (node->parent->right)
+		node->parent->right = NULL;
 	else
-		last->parent->left = NULL;
-	free(last);
+		node->parent->left = NULL;
+	free(node);
 	return (value);
 }
